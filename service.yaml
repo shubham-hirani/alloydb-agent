@@ -13,8 +13,6 @@ spec:
           name: backend
           resources:
             limits: { cpu: "1", memory: "512Mi" }
-          ports:
-            - containerPort: 8000
         - image: FRONTEND_IMAGE # <--- Cloud Build will replace this
           name: frontend
           ports:
