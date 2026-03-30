@@ -1,0 +1,25 @@
+steps:
+  # 1. Build Backend
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/grant-repo/backend:$COMMIT_SHA', '-f', 'backend/Dockerfile', '.']
+
+  # 2. Build Frontend
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/grant-repo/frontend:$COMMIT_SHA', '-f', 'frontend/Dockerfile', '.']
+
+  # 3. Push both images
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'us-central1-docker.pkg.dev/$PROJECT_ID/grant-repo/backend:$COMMIT_SHA']
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'us-central1-docker.pkg.dev/$PROJECT_ID/grant-repo/frontend:$COMMIT_SHA']
+
+  # 4. Update the service.yaml with the new Image Tags
+  # This uses 'sed' to swap the placeholder in service.yaml with the real Image URL
+  - name: 'gcr.io/cloud-builders/gcloud'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        sed -i "s|BACKEND_IMAGE|us-central1-docker.pkg.dev/$PROJECT_ID/grant-repo/backend:$COMMIT_SHA|g" service.yaml
+        sed -i "s|FRONTEND_IMAGE|us-central1-docker.pkg.dev/$PROJECT_ID/grant-repo/frontend:$COMMIT_SHA|g" service.yaml
+        gcloud run services replace service.yaml --region us-central1

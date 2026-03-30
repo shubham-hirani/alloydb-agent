@@ -1,0 +1,10 @@
+google-adk
+fastapi
+uvicorn
+streamlit
+requests
+google-cloud-alloydb-connector
+google-cloud-aiplatform
+google-auth
+sqlalchemy
+pg8000
