@@ -1,26 +1,33 @@
 steps:
-  # 1. Build Backend (Tag with BOTH SHA and Latest)
+  # 1. Build Backend
   - name: 'gcr.io/cloud-builders/docker'
     args:
       - 'build'
-      - '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/grant-repo/backend:$COMMIT_SHA'
-      - '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/grant-repo/backend:latest'
-      - '-f', 'backend/Dockerfile', '.'
+      - '-t'
+      - 'us-central1-docker.pkg.dev/$PROJECT_ID/grant-repo/backend:$COMMIT_SHA'
+      - '-f'
+      - 'backend/Dockerfile'
+      - '.'
 
-  # 2. Build Frontend (Tag with BOTH SHA and Latest)
+  # 2. Build Frontend
   - name: 'gcr.io/cloud-builders/docker'
     args:
-      - '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/grant-repo/frontend:$COMMIT_SHA'
-      - '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/grant-repo/frontend:latest'
-      - '-f', 'frontend/Dockerfile', '.'
+      - 'build'
+      - '-t'
+      - 'us-central1-docker.pkg.dev/$PROJECT_ID/grant-repo/frontend:$COMMIT_SHA'
+      - '-f'
+      - 'frontend/Dockerfile'
+      - '.'
 
-  # 3. Push all tags
+  # 3. Push Backend
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'us-central1-docker.pkg.dev/$PROJECT_ID/grant-repo/backend', '--all-tags']
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'us-central1-docker.pkg.dev/$PROJECT_ID/grant-repo/frontend', '--all-tags']
+    args: ['push', 'us-central1-docker.pkg.dev/$PROJECT_ID/grant-repo/backend:$COMMIT_SHA']
 
-  # 4. Replace placeholders and Deploy to us-east1
+  # 4. Push Frontend
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'us-central1-docker.pkg.dev/$PROJECT_ID/grant-repo/frontend:$COMMIT_SHA']
+
+  # 5. Update and Deploy
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: 'bash'
     args:
