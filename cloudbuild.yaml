@@ -1,25 +1,37 @@
 steps:
-  # 1. Build Backend with Commit SHA
+  # 1. Build Backend
   - name: 'gcr.io/cloud-builders/docker'
     args:
       - 'build'
-      - '-t', 'asia-south1-docker.pkg.dev/$PROJECT_ID/grant-repo/backend:$COMMIT_SHA'
-      - '-f', 'backend/Dockerfile', '.'
+      - '-t'
+      - 'asia-south1-docker.pkg.dev/$PROJECT_ID/grant-repo/backend:$COMMIT_SHA'
+      - '-f'
+      - 'backend/Dockerfile'
+      - '.'
 
-  # 2. Build Frontend with Commit SHA
+  # 2. Build Frontend
   - name: 'gcr.io/cloud-builders/docker'
     args:
       - 'build'
-      - '-t', 'asia-south1-docker.pkg.dev/$PROJECT_ID/grant-repo/frontend:$COMMIT_SHA'
-      - '-f', 'frontend/Dockerfile', '.'
+      - '-t'
+      - 'asia-south1-docker.pkg.dev/$PROJECT_ID/grant-repo/frontend:$COMMIT_SHA'
+      - '-f'
+      - 'frontend/Dockerfile'
+      - '.'
 
-  # 3. Push Both
+  # 3. Push Backend
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'asia-south1-docker.pkg.dev/$PROJECT_ID/grant-repo/backend:$COMMIT_SHA']
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'asia-south1-docker.pkg.dev/$PROJECT_ID/grant-repo/frontend:$COMMIT_SHA']
+    args:
+      - 'push'
+      - 'asia-south1-docker.pkg.dev/$PROJECT_ID/grant-repo/backend:$COMMIT_SHA'
 
-  # 4. Inject the REAL image paths into service.yaml and Deploy
+  # 4. Push Frontend
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - 'asia-south1-docker.pkg.dev/$PROJECT_ID/grant-repo/frontend:$COMMIT_SHA'
+
+  # 5. Update YAML and Deploy
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: 'bash'
     args:
