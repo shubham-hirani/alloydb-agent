@@ -33,7 +33,7 @@ steps:
       - |
         sed -i "s|BACKEND_IMAGE|us-central1-docker.pkg.dev/$PROJECT_ID/grant-repo/backend:$COMMIT_SHA|g" service.yaml
         sed -i "s|FRONTEND_IMAGE|us-central1-docker.pkg.dev/$PROJECT_ID/grant-repo/frontend:$COMMIT_SHA|g" service.yaml
-        gcloud run services replace service.yaml --region us-central1
+        gcloud run services replace service.yaml --region us-east1
 
 options:
   logging: CLOUD_LOGGING_ONLY
