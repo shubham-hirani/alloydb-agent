@@ -8,12 +8,14 @@ spec:
   template:
     spec:
       serviceAccountName: 610755018887-compute@developer.gserviceaccount.com
+      containerConcurrency: 80
+      timeoutSeconds: 300
       containers:
         - image: BACKEND_IMAGE
           name: backend
           resources:
             limits: { cpu: "1", memory: "512Mi" }
-          # No ports defined here is correct for sidecars
+          # Internal only: no ports section needed here
         - image: FRONTEND_IMAGE
           name: frontend
           ports:
@@ -22,9 +24,8 @@ spec:
             - name: BACKEND_URL
               value: "http://localhost:8000/chat"
           startupProbe:
-            tcpSocket:
-              port: 8080
-            initialDelaySeconds: 10
+            timeoutSeconds: 240
             periodSeconds: 10
             failureThreshold: 3
-      timeoutSeconds: 300
+            tcpSocket:
+              port: 8080
