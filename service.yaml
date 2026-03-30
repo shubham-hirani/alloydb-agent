@@ -24,8 +24,9 @@ spec:
             - name: BACKEND_URL
               value: "http://localhost:8000/chat"
           startupProbe:
-            timeoutSeconds: 240
-            periodSeconds: 10
-            failureThreshold: 3
             tcpSocket:
               port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 24
