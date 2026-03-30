@@ -14,4 +14,9 @@ COPY . .
 # Cloud Run defaults to port 8080 for the main ingress container
 EXPOSE 8080
 
-CMD ["streamlit", "run", "app.py", "--server.port", "8080", "--server.address", "0.0.0.0"]
+# frontend/Dockerfile
+CMD ["streamlit", "run", "app.py", \
+     "--server.port", "8080", \
+     "--server.address", "0.0.0.0", \
+     "--server.enableCORS", "false", \
+     "--server.enableXsrfProtection", "false"]

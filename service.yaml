@@ -9,14 +9,22 @@ spec:
     spec:
       serviceAccountName: 610755018887-compute@developer.gserviceaccount.com
       containers:
-        - image: BACKEND_IMAGE  # <--- Cloud Build will replace this
+        - image: BACKEND_IMAGE
           name: backend
           resources:
             limits: { cpu: "1", memory: "512Mi" }
-        - image: FRONTEND_IMAGE # <--- Cloud Build will replace this
+          # No ports defined here is correct for sidecars
+        - image: FRONTEND_IMAGE
           name: frontend
           ports:
             - containerPort: 8080
           env:
             - name: BACKEND_URL
               value: "http://localhost:8000/chat"
+          startupProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            failureThreshold: 3
+      timeoutSeconds: 300
