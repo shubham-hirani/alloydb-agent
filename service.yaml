@@ -8,11 +8,11 @@ spec:
       # Use the default compute service account which now has IAM roles
       serviceAccountName: 610755018887-compute@developer.gserviceaccount.com
       containers:
-        - image: us-central1-docker.pkg.dev/valiant-store-490419-a6/grant-repo/backend:latest
+        - image: asia-south1-docker.pkg.dev/valiant-store-490419-a6/grant-repo/backend:latest
           name: backend
           resources:
             limits: { cpu: "1", memory: "512Mi" }
-        - image: us-central1-docker.pkg.dev/valiant-store-490419-a6/grant-repo/frontend:latest
+        - image: asia-south1-docker.pkg.dev/valiant-store-490419-a6/grant-repo/frontend:latest
           name: frontend
           ports:
             - containerPort: 8080
