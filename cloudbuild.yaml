@@ -1,11 +1,23 @@
 steps:
-  # 1. Build Backend
+  # 1. Build Backend (Context is '.', Dockerfile is 'backend/Dockerfile')
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/grant-repo/backend:$COMMIT_SHA', '-f', 'backend/Dockerfile', '.']
+    args:
+      - 'build'
+      - '-t'
+      - 'us-central1-docker.pkg.dev/$PROJECT_ID/grant-repo/backend:$COMMIT_SHA'
+      - '-f'
+      - 'backend/Dockerfile'
+      - '.'
 
-  # 2. Build Frontend
+  # 2. Build Frontend (Context is '.', Dockerfile is 'frontend/Dockerfile')
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/grant-repo/frontend:$COMMIT_SHA', '-f', 'frontend/Dockerfile', '.']
+    args:
+      - 'build'
+      - '-t'
+      - 'us-central1-docker.pkg.dev/$PROJECT_ID/grant-repo/frontend:$COMMIT_SHA'
+      - '-f'
+      - 'frontend/Dockerfile'
+      - '.'
 
   # 3. Push both images
   - name: 'gcr.io/cloud-builders/docker'
@@ -23,6 +35,5 @@ steps:
         sed -i "s|FRONTEND_IMAGE|us-central1-docker.pkg.dev/$PROJECT_ID/grant-repo/frontend:$COMMIT_SHA|g" service.yaml
         gcloud run services replace service.yaml --region us-central1
 
-# CRITICAL FIX FOR YOUR ERROR:
 options:
   logging: CLOUD_LOGGING_ONLY
