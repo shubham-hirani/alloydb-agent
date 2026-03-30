@@ -1,40 +1,32 @@
 steps:
-  # 1. Build Backend
+  # 1. Build Backend with Commit SHA
   - name: 'gcr.io/cloud-builders/docker'
     args:
       - 'build'
-      - '-t'
-      - 'asia-south1-docker.pkg.dev/$PROJECT_ID/grant-repo/backend:$COMMIT_SHA'
-      - '-f'
-      - 'backend/Dockerfile'
-      - '.'
+      - '-t', 'asia-south1-docker.pkg.dev/$PROJECT_ID/grant-repo/backend:$COMMIT_SHA'
+      - '-f', 'backend/Dockerfile', '.'
 
-  # 2. Build Frontend
+  # 2. Build Frontend with Commit SHA
   - name: 'gcr.io/cloud-builders/docker'
     args:
       - 'build'
-      - '-t'
-      - 'asia-south1-docker.pkg.dev/$PROJECT_ID/grant-repo/frontend:$COMMIT_SHA'
-      - '-f'
-      - 'frontend/Dockerfile'
-      - '.'
+      - '-t', 'asia-south1-docker.pkg.dev/$PROJECT_ID/grant-repo/frontend:$COMMIT_SHA'
+      - '-f', 'frontend/Dockerfile', '.'
 
-  # 3. Push Backend
+  # 3. Push Both
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 'asia-south1-docker.pkg.dev/$PROJECT_ID/grant-repo/backend:$COMMIT_SHA']
-
-  # 4. Push Frontend
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 'asia-south1-docker.pkg.dev/$PROJECT_ID/grant-repo/frontend:$COMMIT_SHA']
 
-  # 5. Update and Deploy
+  # 4. Inject the REAL image paths into service.yaml and Deploy
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: 'bash'
     args:
       - '-c'
       - |
         sed -i "s|BACKEND_IMAGE|asia-south1-docker.pkg.dev/$PROJECT_ID/grant-repo/backend:$COMMIT_SHA|g" service.yaml
-          sed -i "s|FRONTEND_IMAGE|asia-south1-docker.pkg.dev/$PROJECT_ID/grant-repo/frontend:$COMMIT_SHA|g" service.yaml
+        sed -i "s|FRONTEND_IMAGE|asia-south1-docker.pkg.dev/$PROJECT_ID/grant-repo/frontend:$COMMIT_SHA|g" service.yaml
         gcloud run services replace service.yaml --region asia-south1
 
 options:

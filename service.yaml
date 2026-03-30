@@ -2,17 +2,20 @@ apiVersion: serving.knative.dev/v1
 kind: Service
 metadata:
   name: eco-matcher-agent
+  annotations:
+    run.googleapis.com/launch-stage: BETA
 spec:
   template:
     spec:
-      # Use the default compute service account which now has IAM roles
       serviceAccountName: 610755018887-compute@developer.gserviceaccount.com
       containers:
-        - image: asia-south1-docker.pkg.dev/valiant-store-490419-a6/grant-repo/backend:latest
+        - image: BACKEND_IMAGE  # <--- Cloud Build will replace this
           name: backend
           resources:
             limits: { cpu: "1", memory: "512Mi" }
-        - image: asia-south1-docker.pkg.dev/valiant-store-490419-a6/grant-repo/frontend:latest
+          ports:
+            - containerPort: 8000
+        - image: FRONTEND_IMAGE # <--- Cloud Build will replace this
           name: frontend
           ports:
             - containerPort: 8080
