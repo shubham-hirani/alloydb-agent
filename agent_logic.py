@@ -86,6 +86,6 @@ async def _run_async(user_prompt: str, supplier_id: int):
             new_message=user_message  # Pass the object, not the string!
     ):
         if event.text:
-            response_text += event.text
+            response_text += event.content
 
     return response_text
