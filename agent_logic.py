@@ -83,8 +83,8 @@ async def _run_async(user_prompt: str, supplier_id: int):
     response_text = ""
     # 3. Pass the user_message object to new_message
     async for event in runner.run_async(
-            session_id=session.id,
-            user_id=session.user_id,
+            session_id=custom_session_id,
+            user_id=f"user_{supplier_id}",
             new_message=user_message  # Pass the object, not the string!
     ):
         if event.text:
