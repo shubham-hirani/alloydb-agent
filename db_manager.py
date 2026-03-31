@@ -24,8 +24,8 @@ def get_connection():
             raise ValueError("Missing ALLOYDB_INSTANCE_URI or DB_USER environment variables.")
 
         conn = connector.connect(
-            instance_string=instance_uri,
-            driver_strategy="pg8000",
+            instance_uri=instance_uri,
+            driver="pg8000",
             user=db_user,
             db=db_name,
             enable_iam_auth=True,
