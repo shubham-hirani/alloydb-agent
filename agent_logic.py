@@ -51,7 +51,8 @@ session_service = InMemorySessionService()
 runner = Runner(
     agent=agent,
     app_name="eco_matcher_app",  # Add this line
-    session_service=session_service
+    session_service=session_service,
+    auto_create_session=True
 )
 
 
