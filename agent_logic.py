@@ -1,6 +1,7 @@
 import os
 import asyncio
 from google.adk import Agent,  Runner
+from google.adk.errors import already_exists_error
 from google.adk.tools import FunctionTool
 from google.adk.sessions import InMemorySessionService
 from google.genai import types
@@ -63,7 +64,8 @@ async def _run_async(user_prompt: str, supplier_id: int):
     # 1. Create or get your session as before
     custom_session_id = f"session_supplier_{supplier_id}"
     try:
-        session = await session_service.get_session(session_id=custom_session_id)
+        session = await session_service.get_session(session_id=custom_session_id, app_name="eco_matcher_app",
+            user_id=f"user_{supplier_id}")
     except Exception:
         session = await session_service.create_session(
             session_id=custom_session_id,
